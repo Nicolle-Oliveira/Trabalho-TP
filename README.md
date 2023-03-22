@@ -14,6 +14,7 @@ servidor servirá como unidade centralizadora de todas as conexões recebidas vi
 
 ## Interface Gráfica
 <a href="https://www.devmedia.com.br/como-criar-um-chat-multithread-com-socket-em-java/33639">Referência Dev Media</a>
+Alguns testes iniciais foram feitos, arquivo Main.java
 
 ## Equipe
 Artur Gonzaga, Nicolle Oliveira, Vitória Honório
