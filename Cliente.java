@@ -1,25 +1,11 @@
 //Bibliotecas
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.io.*;
+import java.awt.*;
+import java.text.*;
+import java.util.*;
 import javax.swing.*;
-import javax.swing.JFrame;
-import javax.imageio.ImageIO;
-import java.io.File;
-import javax.swing.border.*;
-
-
+import java.awt.event.*;
+import java.net.Socket;
 
 //A classe JFrame cria a tela visível para o cliente
 public class Cliente extends JFrame implements ActionListener {
@@ -48,40 +34,29 @@ public class Cliente extends JFrame implements ActionListener {
     //Classe Cliente pode lançar exceções do tipo de Entrada e Saída (IO)
     public Cliente() throws IOException{
         
-        JPanel ipUsuario = new JPanel();
-        JPanel portaUsuario = new JPanel();
-        JPanel nomeUsuario = new JPanel();
+        CustomPanel ipUsuario = new CustomPanel();
+        CustomPanel portaUsuario = new CustomPanel();
+        CustomPanel nomeUsuario = new CustomPanel();
         JPanel inicio = new JPanel();
+        JLabel inicioLabel = new JLabel("BEM VINDO AO CHAT ONLINE");
+        inicio.add(inicioLabel);
 
-        //Borda e Background
-        ipUsuario.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, new Color(112,128,144)));
-        portaUsuario.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, new Color(112,128,144)));                            
-        nomeUsuario.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, new Color(112,128,144)));
-
-        ipUsuario.setBackground(new Color(176,196,222));
-        portaUsuario.setBackground(new Color(176,196,222));
-        nomeUsuario.setBackground(new Color(176,196,222));
         //Inicializa dados do usuário
         ipInicial = new JTextField("127.0.0.1");
         portaInicial = new JTextField("9000");
         nomeInicial = new JTextField("Visitante");
-        //Fonte dados iniciais
-        ipInicial.setFont(new Font("Alkatra", Font.BOLD, 15));
-        portaInicial.setFont(new Font("Alkatra", Font.BOLD, 15));
-        nomeInicial.setFont(new Font("Alkatra", Font.BOLD, 15));
+
         //Grava novos dados do usuário 
-        JLabel enderecoIpLabel = new JLabel("ENDEREÇO DE IP:    ");
-        enderecoIpLabel.setFont(new Font("Alkatra", Font.BOLD, 15));
+        CustomLabel enderecoIpLabel = new CustomLabel();
+        //CustomLabel enderecoIpLabel = new CustomLabel("ENDEREÇO DE IP:    ");
         ipUsuario.add(enderecoIpLabel); 
         ipUsuario.add(ipInicial);
        
-        JLabel portaLabel = new JLabel("PORTA:                 ");
-        portaLabel.setFont(new Font("Alkatra", Font.BOLD, 15));
+        CustomLabel portaLabel = new CustomLabel("PORTA:                 ");
         portaUsuario.add(portaLabel); 
         portaUsuario.add(portaInicial);
 
-        JLabel nomeLabel = new JLabel("NOME DE USUÁRIO: ");
-        nomeLabel.setFont(new Font("Alkatra", Font.BOLD, 15));
+        CustomLabel nomeLabel = new CustomLabel("NOME DE USUÁRIO: ");
         nomeUsuario.add(nomeLabel); 
         nomeUsuario.add(nomeInicial);
         /*
@@ -90,23 +65,32 @@ public class Cliente extends JFrame implements ActionListener {
         */
         Object[] dadosUsuario = {ipUsuario, portaUsuario, nomeUsuario, inicio};
         JOptionPane.showMessageDialog(null, dadosUsuario);
+
         //Definindo aspecto do titulo e da mensagem de online
-        tituloChat.setForeground(Color.BLACK);
+        //tituloChat.setForeground(new Color(245,111,63));
+        tituloChat.setForeground(new Color(24,245,147));
         tituloChat.setFont(new Font("Alkatra", Font.BOLD, 18));
-        online.setForeground(Color.BLACK);
-        online.setFont(new Font("Alkatra", Font.BOLD, 13));
+
+        online.setForeground(new Color(95, 244, 245));
+        online.setFont(new Font("Alkatra", Font.BOLD + Font.ITALIC, 13));
         //Cor de fundo chat
-        chat.setBackground(new Color(176,196,222));
-        chat.setBorder(BorderFactory.createMatteBorder(3, 5, 3, 3, new Color(112,128,144)));
+        chat.setBackground(new Color(32,22,45));
+        //chat.setBorder(BorderFactory.createMatteBorder(3, 5, 3, 3,Color.CYAN));
+
         //Cor do texto e de sua área, fonte, tamanho e margens
-        textArea.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(112,128,144)));
-        textArea.setBackground(Color.WHITE);
-        textArea.setForeground(Color.BLACK);
+        //textArea.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, new Color(245,111,63)));
+
+        textArea.setBorder(null);
+        textArea.setBorder(BorderFactory.createMatteBorder(4, 1, 2, 1, new Color(24,245,147)));
+        textArea.setBackground(new Color(25, 22, 34));
+        textArea.setForeground(new Color(24,245,147));
         textArea.setFont(new Font("Alkatra", Font.BOLD, 12));
         textArea.setMargin(new Insets(20,20,0,0));
         textArea.setEditable(false);
         //Dimensão da caixa de mensagem
         caixaMensagem.setPreferredSize(new Dimension(100, 25));  
+        caixaMensagem.setBackground(new Color(25, 22, 34));
+        caixaMensagem.setForeground(new Color(24,245,147));
         //Método faz com que o botão, sempre que for clicado, chame o método actionPerformed do ActionListener    
         botaoEnviar.addActionListener(this);
         botaoLimpar.addActionListener(this);
@@ -126,12 +110,12 @@ public class Cliente extends JFrame implements ActionListener {
         chat.add(botaoLimpar);
         chat.add(botaoSair);
         //Definições interface
-        setSize(620,670);
+        setSize(650,700);
         setTitle(nomeInicial.getText());
         setContentPane(chat);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(true);
+        setResizable(false);
         setVisible(true);
     }
     //Metodo que conecta o cliente
@@ -198,9 +182,9 @@ public class Cliente extends JFrame implements ActionListener {
     }
    
     public static void main(String []args) throws IOException{
-        Cliente Cliente = new Cliente();
-        Cliente.ConectandoCliente();
-        Cliente.UpdateCliente();
+        Cliente cliente = new Cliente();
+        cliente.ConectandoCliente();
+        cliente.UpdateCliente();
     }
 }
 

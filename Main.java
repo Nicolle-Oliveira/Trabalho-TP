@@ -1,6 +1,7 @@
-package AQUI4;
 
-import java.awt.BorderLayout;
+
+import java.awt.*;
+/*import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -8,10 +9,12 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+*/
+import java.awt.event.*;
 
-import javax.swing.JFrame;
 import javax.swing.*;
-import javax.swing.WindowConstants;
+//import javax.swing.JFrame;
+//import javax.swing.WindowConstants;
 
 public class Main extends JFrame{
     
@@ -68,7 +71,6 @@ public class Main extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 tfFirstName.setText("");
                 tfLastName.setText("");
                 lbWelcome.setText("");
