@@ -1,49 +1,67 @@
-//Package
-import models.*;
-
-//Bibliotecas
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import java.net.Socket;
-import java.net.ServerSocket;
 import java.awt.HeadlessException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Servidor extends Thread{
-    private String nome;
-    final static String[] options = {"Ok", "Cancel"};
-    final static String msg_port = "O servidor foi iniciado na porta: ";
-    final static String PORT = "9000";
-    
+
+    private String nomeUsuario;
+    final static String[] opcoes = {"Ok", "Cancelar"};
+    final static String iniciadoServidor = "Servidor iniciando na porta: ";
+    final static String porta = "9000";
+    /*
+    Socket - Permite a comunicação entre os clientes
+    ServerSocket - Espera a conexão do cliente, possui um construtor onde passamos a porta que desejamos usar para escutar as conexões
+    BufferedReader - Lê o texto de um fluxo de entrada de caracteres, armazenando caracteres em um buffer
+    */
     private final Socket socket;
-    private static ServerSocket server;
-    private BufferedReader bf_reader;
-    
-    private static ArrayList<BufferedWriter>clients;
-    
+    private static ServerSocket servidor;
+    private BufferedReader bufferReader;
+    //ArayList do tipo BufferedWriter que adiciona objetos em clientes
+    private static ArrayList<BufferedWriter>clientes;
+    /* 
+    Metodo servidor que recebe o socket como parametro
+    InputStreamReader - Lê os bytes do fluxo de entrada como caracteres, converte dados em bytes em dados em caracteres
+    toString - É herdado de todo objeto descendente de Object, é chamado quando o objeto precisa ser representado como um valor em texto (nexte caso em uma exceção)
+    */
     public Servidor(Socket socket){
         this.socket = socket;
         try {
-            bf_reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            bufferReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             System.out.println(e.toString());
         }
     }
-    
+    /*
+    Run() - Executa a tarefa da thread
+    OutputStreamWriter - Ponte de streams de caracteres para streams de bytes
+    GetOutputStream -  Retorna um fluxo de saída para o socket fornecido
+    EqualsIgnoreCase - Compara uma String, sem fazer distinção entre letras maiusculas e minusculas
+    */
     @Override
     public void run(){
         try{
-          String msg;
+          String mensagem;
           
-          BufferedWriter bf_writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
-          clients.add(bf_writer);
-          nome = msg = bf_reader.readLine();
+          BufferedWriter bufferWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+          clientes.add(bufferWriter);
+          nomeUsuario = mensagem = bufferReader.readLine();
 
-          while(!"Sair".equalsIgnoreCase(msg) && msg != null){
-            msg = bf_reader.readLine();
-            SendMessageToAll(bf_writer, msg);
-            System.out.println(msg);
+          while(!"Sair".equalsIgnoreCase(mensagem) && mensagem != null){
+            mensagem = bufferReader.readLine();
+            mandaMensagemUsuario(bufferWriter, mensagem);
+            System.out.println(mensagem);
           }
         }catch (IOException e) {
             System.out.println(e.toString());
@@ -52,25 +70,35 @@ public class Servidor extends Thread{
     
     public static void main(String []args) throws IOException{
         try{
-            JTextField tf_port  = new JTextField(PORT,16);
-            PainelInicial panel = new PainelInicial("Porta do servidor",tf_port);
+            //JTextField - criação de formulários para a inserção dos dados 
+            JTextField portaServidor = new JTextField(porta);
             
-            int result = JOptionPane.showOptionDialog(null, panel, "Socket chat", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, 0);
+            JPanel janela = new JPanel();
+            janela.add(new JLabel("Porta do servidor: "));
+            janela.add(portaServidor);
+            /*
+            As opções são herdadas da classe javax.swing.JOptionPane
+            JOptionPane possui métodos estáticos que criam caixas de diálogos simples e objetivas
+            */
+            int opcaoEscolhida = JOptionPane.showOptionDialog(null, janela, "Socket chat", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, 0);
             
-            if(result == JOptionPane.NO_OPTION){
+            if(opcaoEscolhida == JOptionPane.NO_OPTION){
                System.out.println("O servidor foi finalizado.");
                System.exit(0);
             }
+            /*
+            showMessageDialog - Exibe uma caixa de mensagens com um botão
+            JOptionPane.showMessageDialog(centraliza a caixa na tela, determina a posição da caixa);
+            */
+            JOptionPane.showMessageDialog(null, iniciadoServidor + portaServidor.getText());
             
-            JOptionPane.showMessageDialog(null, msg_port + tf_port.getText());
-            
-            clients = new ArrayList<>();
-            server = new ServerSocket(Integer.parseInt(tf_port.getText()));
+            clientes = new ArrayList<>();
+            servidor = new ServerSocket(Integer.parseInt(portaServidor.getText()));
             
             while(true){
-                System.out.println("O servidor está online, aguardando conexões...");
-                Socket socket = server.accept();
-                System.out.println("Cliente conectou ao servidor.");
+                System.out.println("SERVIDOR ONLINE");
+                Socket socket = servidor.accept();
+                System.out.println("Usuário conectou ao servidor");
                 Thread thread = new Servidor(socket);
                 thread.start();
             }
@@ -79,22 +107,21 @@ public class Servidor extends Thread{
             System.out.println(e.toString());
         }
     }
-    
-    public void SendMessageToAll(BufferedWriter bf_writer, String message) throws IOException{
-        BufferedWriter bfa_writer;
-        for(BufferedWriter bfw : clients){
-            bfa_writer = (BufferedWriter)bfw;
-            if(!(bf_writer == bfa_writer)){
-                if(message.equals("Desconectado")){
-                    bfw.write(nome + " desconectou do chat." + "\r\n");
+    //Metodo que envia mensagem a todos
+    public void mandaMensagemUsuario(BufferedWriter bufferWriter, String mensagemUsuario) throws IOException{
+        BufferedWriter bufferWriterUsuario;
+        for(BufferedWriter buffer: clientes){
+            bufferWriterUsuario = (BufferedWriter)buffer;
+            if(!(bufferWriter == bufferWriterUsuario)){
+                if(mensagemUsuario.equals("Desconectado")){
+                    buffer.write(nomeUsuario + " desconectou do chat" + "\r\n");
                 }else{
                     //Imprimindo a mensagem dos outros usuários 
-                    bfw.write(nome + "  [" + new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime()) + "] " + "\n" + message + "\r\n");
+                    buffer.write(nomeUsuario + "  [" + new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime()) + "] " + "\n" + mensagemUsuario + "\r\n");
                 }
-                bfw.flush();
+                //O flush() esvazia o conteúdo do Buffer
+                buffer.flush();
             }
         }
     }
 }
-
-
