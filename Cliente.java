@@ -17,8 +17,8 @@ public class Cliente extends JFrame implements ActionListener {
     private final JTextField ipInicial;
     private final JTextField portaInicial;
     private final JTextField nomeInicial;
-    // O modificador "final" determina que depois de 
-    // inicializada o valor da variável não pode ser modificado 
+    /* O modificador "final" determina que depois de 
+    inicializada o valor da variável não pode ser modificado */ 
 
     // Criação de um Container genérico
     private final JPanel chat = new JPanel();   
@@ -133,17 +133,17 @@ public class Cliente extends JFrame implements ActionListener {
         bufferWriter.flush();
     }
     //Mensagens de aviso para o usuário
-    public void MensagensAvisos(String message) throws IOException{
-        if(message.length() < 1){
+    public void MensagensAvisos(String mensagem) throws IOException{
+        if(mensagem.length() < 1){
             textArea.append("Não há nada escrito \r\n");
-        }else if(message.equals("/sair")){
+        }else if(mensagem.equals("/sair")){
           bufferWriter.write("Desconectado");
           textArea.append("Usuário desconectado do chat\r\n");
-        }else if(message.equals("/limparchat")){
+        }else if(mensagem.equals("/limparchat")){
           textArea.selectAll();
           textArea.replaceSelection("Chat limpo. \r\n");  
         }else{
-          bufferWriter.write(message +"\r\n");
+          bufferWriter.write(mensagem +"\r\n");
           textArea.append(nomeInicial.getText() + " [" + new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime()) + "] " + "\n" + caixaMensagem.getText()+ "\n");
         }
         bufferWriter.flush();
@@ -151,16 +151,16 @@ public class Cliente extends JFrame implements ActionListener {
     }
    
     public void UpdateCliente() throws IOException{
-        String message = "";
-        BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        while(!"/sair".equalsIgnoreCase(message)){
-            if(bfr.ready()){
-                message = bfr.readLine();
-                if(message.equals("/sair")){
-                    textArea.append("Você desconectou do chat! \r\n");
+        String mensagem = "";
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        while(!"/sair".equalsIgnoreCase(mensagem)){
+            if(buffer.ready()){
+                mensagem = buffer.readLine();
+                if(mensagem.equals("/sair")){
+                    textArea.append("Você desconectou do chat \r\n");
                 }    
                 else{
-                    textArea.append(message + "\r\n");
+                    textArea.append(mensagem + "\r\n");
                 }
             }
         }    
@@ -171,7 +171,7 @@ public class Cliente extends JFrame implements ActionListener {
         bufferWriter.close();
         socket.close();
     }
-   
+   //Botões
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
@@ -187,7 +187,7 @@ public class Cliente extends JFrame implements ActionListener {
             System.out.println(error.toString());
         }
     }
-   
+   //Main
     public static void main(String []args) throws IOException{
         Cliente cliente = new Cliente();
         cliente.ConectandoCliente();
