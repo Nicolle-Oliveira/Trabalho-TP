@@ -1,18 +1,14 @@
-import java.awt.HeadlessException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
+//Package
+import models.*;
+
+//Bibliotecas
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
 import java.net.Socket;
+import java.net.ServerSocket;
+import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class Servidor extends Thread{
     private String nome;
@@ -56,11 +52,8 @@ public class Servidor extends Thread{
     
     public static void main(String []args) throws IOException{
         try{
-            JTextField tf_port = new JTextField(PORT);
-            
-            JPanel panel = new JPanel();
-            panel.add(new JLabel("Porta do servidor: "));
-            panel.add(tf_port);
+            JTextField tf_port  = new JTextField(PORT,16);
+            PainelInicial panel = new PainelInicial("Porta do servidor",tf_port);
             
             int result = JOptionPane.showOptionDialog(null, panel, "Socket chat", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, 0);
             

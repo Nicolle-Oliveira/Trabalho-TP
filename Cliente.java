@@ -1,3 +1,6 @@
+//Package
+import models.*;
+
 //Bibliotecas
 import java.io.*;
 import java.awt.*;
@@ -9,22 +12,33 @@ import java.net.Socket;
 
 //A classe JFrame cria a tela visível para o cliente
 public class Cliente extends JFrame implements ActionListener {
+
     //Variáveis com dados do usuário
-    /*O modificador "final" determina que depois de incializada
-    o valor da variável não pode ser modificado*/
     private final JTextField ipInicial;
     private final JTextField portaInicial;
     private final JTextField nomeInicial;
-   
-    private final JPanel chat = new JPanel();   // Criação de um Container genérico
-    private final JTextArea textArea = new JTextArea(30, 53);   //Permite a edição do texto(Fonte, cor...)
-    private final JTextField caixaMensagem = new JTextField(50);   //Criação de formulários com inserção de texto
-    private final JLabel tituloChat = new JLabel("CHAT ONLINE");    //Exibe uma String curta ou um icone de imagem
-    private final JLabel online = new JLabel("Envie e receba mensagens");   //Mensagem de online do usuário
+    // O modificador "final" determina que depois de 
+    // inicializada o valor da variável não pode ser modificado 
+
+    // Criação de um Container genérico
+    private final JPanel chat = new JPanel();   
+
+    //Permite a edição do texto(Fonte, cor...)
+    private final JTextArea textArea = new JTextArea(30, 53);   
+
+    //Criação de formulários com inserção de texto
+    private final JTextField caixaMensagem = new JTextField(50);   
+
+    //Exibe uma String curta ou um icone de imagem
+    private final JLabel tituloChat = new JLabel("CHAT ONLINE");    
+
+    //Mensagem de online do usuário
+    private final JLabel online = new JLabel("Envie e receba mensagens");   
+
     //Botões
     private final JButton botaoEnviar = new JButton("Enviar");
     private final JButton botaoLimpar = new JButton("Limpar");
-    private final JButton botaoSair = new JButton("Sair");
+    private final JButton botaoSair   = new JButton("Sair");
     /*
     Socket - Permite a comunicação entre os clientes
     BufferedWriter - Memória que armazena um fluxo de saída de caracteres
@@ -32,39 +46,32 @@ public class Cliente extends JFrame implements ActionListener {
     private Socket socket;
     private BufferedWriter bufferWriter;
     //Classe Cliente pode lançar exceções do tipo de Entrada e Saída (IO)
-    public Cliente() throws IOException{
-        
-        CustomPanel ipUsuario = new CustomPanel();
-        CustomPanel portaUsuario = new CustomPanel();
-        CustomPanel nomeUsuario = new CustomPanel();
-        JPanel inicio = new JPanel();
-        JLabel inicioLabel = new JLabel("BEM VINDO AO CHAT ONLINE");
+    public Cliente() throws IOException {
+
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+        /* CAIXA DE TEXTO INICIAL*/ 
+
+        //Boas vindas
+        JPanel inicio       = new JPanel();
+        JLabel inicioLabel  = new JLabel("BEM VINDO AO CHAT ONLINE");
         inicio.add(inicioLabel);
 
         //Inicializa dados do usuário
-        ipInicial = new JTextField("127.0.0.1");
-        portaInicial = new JTextField("9000");
-        nomeInicial = new JTextField("Visitante");
+        ipInicial    = new JTextField("127.0.0.1",16);
+        portaInicial = new JTextField("9000", 16);
+        nomeInicial  = new JTextField("Visitante", 16);
 
-        //Grava novos dados do usuário 
-        CustomLabel enderecoIpLabel = new CustomLabel();
-        //CustomLabel enderecoIpLabel = new CustomLabel("ENDEREÇO DE IP:    ");
-        ipUsuario.add(enderecoIpLabel); 
-        ipUsuario.add(ipInicial);
-       
-        CustomLabel portaLabel = new CustomLabel("PORTA:                 ");
-        portaUsuario.add(portaLabel); 
-        portaUsuario.add(portaInicial);
+        //PainelTitulo ipUsuario = new PainelTitulo();
+        PainelInicial ipUsuario      = new PainelInicial("IP",ipInicial);
+        PainelInicial portaUsuario   = new PainelInicial("Porta",portaInicial);
+        PainelInicial nomeUsuario    = new PainelInicial("Nome",nomeInicial);
 
-        CustomLabel nomeLabel = new CustomLabel("NOME DE USUÁRIO: ");
-        nomeUsuario.add(nomeLabel); 
-        nomeUsuario.add(nomeInicial);
-        /*
-        JOptionPane - Cria caixa de diálogos
-        Array Object permite a gravação de qualquer objeto
-        */
-        Object[] dadosUsuario = {ipUsuario, portaUsuario, nomeUsuario, inicio};
+        //Array Object permite a gravação de qualquer objeto
+        Object[] dadosUsuario = { inicio, ipUsuario, portaUsuario, nomeUsuario};
+        //JOptionPane - Cria caixa de diálogos
         JOptionPane.showMessageDialog(null, dadosUsuario);
+
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
         //Definindo aspecto do titulo e da mensagem de online
         //tituloChat.setForeground(new Color(245,111,63));
@@ -90,7 +97,7 @@ public class Cliente extends JFrame implements ActionListener {
         //Dimensão da caixa de mensagem
         caixaMensagem.setPreferredSize(new Dimension(100, 25));  
         caixaMensagem.setBackground(new Color(25, 22, 34));
-        caixaMensagem.setForeground(new Color(24,245,147));
+        caixaMensagem.setForeground(new Color(24,245,147)); // verde
         //Método faz com que o botão, sempre que for clicado, chame o método actionPerformed do ActionListener    
         botaoEnviar.addActionListener(this);
         botaoLimpar.addActionListener(this);
@@ -110,7 +117,7 @@ public class Cliente extends JFrame implements ActionListener {
         chat.add(botaoLimpar);
         chat.add(botaoSair);
         //Definições interface
-        setSize(650,700);
+        setSize(680,700);
         setTitle(nomeInicial.getText());
         setContentPane(chat);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -187,5 +194,3 @@ public class Cliente extends JFrame implements ActionListener {
         cliente.UpdateCliente();
     }
 }
-
-
