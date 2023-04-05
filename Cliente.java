@@ -30,15 +30,15 @@ public class Cliente extends JFrame implements ActionListener {
     private final JTextField caixaMensagem = new JTextField(50);   
 
     //Exibe uma String curta ou um icone de imagem
-    private final JLabel tituloChat = new JLabel("CHAT ONLINE");    
+    private final JLabel tituloChat = new JLabel("CHAT ONLINE", SwingConstants.CENTER);    
 
     //Mensagem de online do usuário
-    private final JLabel online = new JLabel("Envie e receba mensagens");   
+    private final JLabel online = new JLabel("Envie e receba mensagens ≧◠‿◠≦✌",  SwingConstants.CENTER);   
 
     //Botões
-    private final JButton botaoEnviar = new JButton("Enviar");
-    private final JButton botaoLimpar = new JButton("Limpar");
-    private final JButton botaoSair   = new JButton("Sair");
+    private final JButton botaoEnviar = new JButton("ENVIAR");
+    private final JButton botaoLimpar = new JButton("LIMPAR");
+    private final JButton botaoSair   = new JButton("SAIR");
     /*
     Socket - Permite a comunicação entre os clientes
     BufferedWriter - Memória que armazena um fluxo de saída de caracteres
@@ -72,43 +72,100 @@ public class Cliente extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(null, dadosUsuario);
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        /* MONTAGEM DA CAIXA DO CHAT */
+        /* DEFINIÇÕES GERAIS DA JANELA PRINCIPAL */
+        chat.setBackground(new Color(47,44,46));   //Cor principal
+        chat.setForeground(new Color(89, 124, 168));    //Cor secundaria
+        //chat.setForeground(new Color(1, 171, 149));    //Cor secundaria
+        //chat.setForeground(new Color(164,216,219));    //Cor secundaria
+
+        /* Save 
+        chat.setBackground(new Color(242,39,76));   //Cor principal
+        chat.setForeground(new Color(42,39,76));    //Cor secundaria
+        */
+
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+        /* DEFINIÇÕES DOS ELEMENTOS DA JANELA */
 
         //Definindo aspecto do titulo e da mensagem de online
-        //tituloChat.setForeground(new Color(245,111,63));
-        tituloChat.setForeground(new Color(24,245,147));
+        tituloChat.setOpaque(true);
+        tituloChat.setForeground(chat.getBackground());
+        tituloChat.setBackground(chat.getForeground());
+
         tituloChat.setFont(new Font("Alkatra", Font.BOLD, 18));
+        tituloChat.setPreferredSize(new Dimension(600, 50));
+        //tituloChat.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, chat.getForeground()));
 
-        online.setForeground(new Color(95, 244, 245));
-        online.setFont(new Font("Alkatra", Font.BOLD + Font.ITALIC, 13));
-        //Cor de fundo chat
-        chat.setBackground(new Color(32,22,45));
-        //chat.setBorder(BorderFactory.createMatteBorder(3, 5, 3, 3,Color.CYAN));
+        /* * * * * * * * * * * * * * * * * * * * * * * * */
 
+        // Texto introdutor a caixa de mensagem
+        online.setOpaque(true);
+        online.setForeground(chat.getBackground());
+        online.setBackground(chat.getForeground());
+
+        online.setFont(new Font("Alkatra", Font.BOLD, 13));
+        online.setPreferredSize(new Dimension(400, 20));
+
+        /* * * * * * * * * * * * * * * * * * * * * * * * */
+
+        // Tela do Chat, onde aparece as mensagens de todas os clientes
         //Cor do texto e de sua área, fonte, tamanho e margens
-        //textArea.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, new Color(245,111,63)));
+        textArea.setBackground(new Color(242, 235, 220));
+        textArea.setForeground(new Color(76, 74, 72));
 
+        textArea.setMargin(new Insets(0,20,0,0));
         textArea.setBorder(null);
-        textArea.setBorder(BorderFactory.createMatteBorder(4, 1, 2, 1, new Color(24,245,147)));
-        textArea.setBackground(new Color(25, 22, 34));
-        textArea.setForeground(new Color(95, 244, 245));
         textArea.setFont(new Font("Alkatra", Font.BOLD, 12));
-        textArea.setMargin(new Insets(20,20,0,0));
+
         textArea.setEditable(false);
-        //Dimensão da caixa de mensagem
+        /* * * * * * * * * * * * * * * * * * * * * * * * */
+
+        //Caixa de mensagem, onde o usuario digita sua mensagem
+        caixaMensagem.setBackground(textArea.getBackground());
+        caixaMensagem.setForeground(textArea.getForeground());
+
         caixaMensagem.setPreferredSize(new Dimension(100, 25));  
-        caixaMensagem.setBackground(new Color(25, 22, 34));
-        caixaMensagem.setForeground(new Color(95, 244, 245));
-        //Método faz com que o botão, sempre que for clicado, chame o método actionPerformed do ActionListener    
+        caixaMensagem.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, chat.getForeground()));
+        /* * * * * * * * * * * * * * * * * * * * * * * * */
+
+        //botaoEnviar
         botaoEnviar.addActionListener(this);
+
+        botaoEnviar.setBackground(chat.getForeground());
+        botaoEnviar.setForeground(chat.getBackground());
+
+        botaoEnviar.setBorder(null);
+        botaoEnviar.setFont(new Font("Alkatra", Font.BOLD, 14));
+        botaoEnviar.setPreferredSize(new Dimension(90, 25));
+
+        //botaoLimpar
         botaoLimpar.addActionListener(this);
+
+        botaoLimpar.setBackground(chat.getForeground());
+        botaoLimpar.setForeground(chat.getBackground());
+
+        botaoLimpar.setBorder(null);
+        botaoLimpar.setFont(new Font("Alkatra", Font.BOLD, 14));
+        botaoLimpar.setPreferredSize(new Dimension(90, 25));
+
+        //botaoSair
         botaoSair.addActionListener(this);
+
+        botaoSair.setBackground(chat.getForeground());
+        botaoSair.setForeground(chat.getBackground());
+
+        botaoSair.setBorder(null);
+        botaoSair.setFont(new Font("Alkatra", Font.BOLD, 14));
+        botaoSair.setPreferredSize(new Dimension(90, 25));
+
+        // Método faz com que o botão, sempre que for clicado, 
+        // chame o método actionPerformed do ActionListener    
         
-        botaoEnviar.setForeground(Color.BLACK);
-        botaoLimpar.setForeground(Color.BLACK);
-        botaoSair.setForeground(Color.BLACK);
+        /* * * * * * * * * * * * * * * * * * * * * * * * */
+        /* INCLUSÕES */
+
         //Container flexível que se adapta conforme um componente adicionado a ele
         JScrollPane rolavel = new JScrollPane(textArea);
+
         //Adicionando elementos
         chat.add(tituloChat);
         chat.add(rolavel);
@@ -117,14 +174,16 @@ public class Cliente extends JFrame implements ActionListener {
         chat.add(botaoEnviar);
         chat.add(botaoLimpar);
         chat.add(botaoSair);
-        //Definições interface
-        setSize(680,700);
-        setTitle(nomeInicial.getText());
+
+        setVisible(true);
+        setTitle(nomeInicial.getName());
         setContentPane(chat);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setSize(600,700);
         setLocationRelativeTo(null);
         setResizable(false);
-        setVisible(true);
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     //Metodo que conecta o cliente
     public void ConectandoCliente() throws IOException{
@@ -148,7 +207,7 @@ public class Cliente extends JFrame implements ActionListener {
             textArea.replaceSelection("Chat limpo. \r\n");  
 
         }else if(mensagem.equals("/conectado")){
-            textArea.append("Você se conectou ao chat\r\n");
+            textArea.append("  Você se conectou ao chat\r\n\n");
         
         }else{
             bufferWriter.write(mensagem +"\r\n");
@@ -178,6 +237,7 @@ public class Cliente extends JFrame implements ActionListener {
         MensagensAvisos("/sair");
         bufferWriter.close();
         socket.close();
+        System.exit(0);
     }
    //Botões
     @Override
