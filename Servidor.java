@@ -1,18 +1,11 @@
-import java.awt.HeadlessException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
+import java.io.*;
+import javax.swing.*;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.net.ServerSocket;
 import java.util.Calendar;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.awt.HeadlessException;
 
 public class Servidor extends Thread{
 
@@ -115,9 +108,10 @@ public class Servidor extends Thread{
             if(!(bufferWriter == bufferWriterUsuario)){
                 if(mensagemUsuario.equals("Desconectado")){
                     buffer.write(nomeUsuario + " desconectou do chat" + "\r\n");
+                
                 }else{
                     //Imprimindo a mensagem dos outros usuários 
-                    buffer.write(nomeUsuario + "  [" + new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime()) + "] " + "\n" + mensagemUsuario + "\r\n");
+                    buffer.write(" [" + new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime()) + "] " + nomeUsuario + " - " + mensagemUsuario + "\r\n");
                 }
                 //O flush() esvazia o conteúdo do Buffer
                 buffer.flush();
