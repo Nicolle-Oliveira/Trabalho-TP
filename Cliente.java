@@ -179,7 +179,7 @@ public class Cliente extends JFrame implements ActionListener {
         setTitle(nomeInicial.getName());
         setContentPane(chat);
 
-        setSize(600,700);
+        setSize(630,700);
         setLocationRelativeTo(null);
         setResizable(false);
 
