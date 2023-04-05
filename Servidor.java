@@ -1,11 +1,19 @@
-import java.io.*;
-import javax.swing.*;
-import java.net.Socket;
-import java.net.ServerSocket;
-import java.util.Calendar;
-import java.util.ArrayList;
-import java.text.SimpleDateFormat;
 import java.awt.HeadlessException;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.io.InputStreamReader;
+import javax.swing.JTextField;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.net.ServerSocket;
+import javax.swing.JOptionPane;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.net.Socket;
+
 
 public class Servidor extends Thread{
 
