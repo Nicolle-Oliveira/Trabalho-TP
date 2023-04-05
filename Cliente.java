@@ -72,6 +72,7 @@ public class Cliente extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(null, dadosUsuario);
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+        /* MONTAGEM DA CAIXA DO CHAT */
 
         //Definindo aspecto do titulo e da mensagem de online
         //tituloChat.setForeground(new Color(245,111,63));
@@ -90,14 +91,14 @@ public class Cliente extends JFrame implements ActionListener {
         textArea.setBorder(null);
         textArea.setBorder(BorderFactory.createMatteBorder(4, 1, 2, 1, new Color(24,245,147)));
         textArea.setBackground(new Color(25, 22, 34));
-        textArea.setForeground(new Color(24,245,147));
+        textArea.setForeground(new Color(95, 244, 245));
         textArea.setFont(new Font("Alkatra", Font.BOLD, 12));
         textArea.setMargin(new Insets(20,20,0,0));
         textArea.setEditable(false);
         //Dimensão da caixa de mensagem
         caixaMensagem.setPreferredSize(new Dimension(100, 25));  
         caixaMensagem.setBackground(new Color(25, 22, 34));
-        caixaMensagem.setForeground(new Color(24,245,147)); // verde
+        caixaMensagem.setForeground(new Color(95, 244, 245));
         //Método faz com que o botão, sempre que for clicado, chame o método actionPerformed do ActionListener    
         botaoEnviar.addActionListener(this);
         botaoLimpar.addActionListener(this);
@@ -131,21 +132,29 @@ public class Cliente extends JFrame implements ActionListener {
         bufferWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         bufferWriter.write(nomeInicial.getText() + "\r\n");
         bufferWriter.flush();
+        MensagensAvisos("/conectado");
     }
     //Mensagens de aviso para o usuário
     public void MensagensAvisos(String mensagem) throws IOException{
         if(mensagem.length() < 1){
             textArea.append("Não há nada escrito \r\n");
+
         }else if(mensagem.equals("/sair")){
-          bufferWriter.write("Desconectado");
-          textArea.append("Usuário desconectado do chat\r\n");
-        }else if(mensagem.equals("/limparchat")){
-          textArea.selectAll();
-          textArea.replaceSelection("Chat limpo. \r\n");  
+            bufferWriter.write("Desconectado");
+            textArea.append("Usuário desconectado do chat\r\n");
+
+        }else if(mensagem.equals("/limparchat")){  
+            textArea.selectAll();
+            textArea.replaceSelection("Chat limpo. \r\n");  
+
+        }else if(mensagem.equals("/conectado")){
+            textArea.append("Você se conectou ao chat\r\n");
+        
         }else{
-          bufferWriter.write(mensagem +"\r\n");
-          textArea.append(nomeInicial.getText() + " [" + new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime()) + "] " + "\n" + caixaMensagem.getText()+ "\n");
+            bufferWriter.write(mensagem +"\r\n");
+            textArea.append(" [" + new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime()) + "] Você - " + caixaMensagem.getText() + "\n");
         }
+
         bufferWriter.flush();
         caixaMensagem.setText("");
     }
@@ -158,8 +167,7 @@ public class Cliente extends JFrame implements ActionListener {
                 mensagem = buffer.readLine();
                 if(mensagem.equals("/sair")){
                     textArea.append("Você desconectou do chat \r\n");
-                }    
-                else{
+                } else{
                     textArea.append(mensagem + "\r\n");
                 }
             }
